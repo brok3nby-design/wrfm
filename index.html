@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#12080a" />
+    <meta name="description" content="WRFM Radio — 1950s satirical radio station. Hosted by Vera Lang. After Hours programming." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <title>WRFM Radio — After Hours</title>
+    <style>
+      /* Prevent flash of white on load */
+      html, body { background: #12080a; margin: 0; padding: 0; }
+    </style>
+    <script type="module" crossorigin src="/wrfm/assets/index-ByD6JK_1.js"></script>
+    <link rel="stylesheet" crossorigin href="/wrfm/assets/index-Jyi-iETI.css">
+  <link rel="manifest" href="/wrfm/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/wrfm/registerSW.js"></script></head>
+  <body>
+    <script>
+      /* Recovery net: if the app bundle or stylesheet fails to load — e.g. a
+         stale service worker from a bad deploy is serving an old index.html —
+         drop every cache, unregister the worker, and reload once. Runs inline
+         so it works even though the app's own JS never executed. */
+      (function () {
+        window.addEventListener('error', function (e) {
+          var t = e.target;
+          if (!t || (t.tagName !== 'SCRIPT' && t.tagName !== 'LINK')) return;
+          try {
+            if (sessionStorage.getItem('wrfm_recovered')) return; // once only
+            sessionStorage.setItem('wrfm_recovered', '1');
+          } catch (err) { return; }
+          var done = function () { location.reload(); };
+          var clearCaches = function () {
+            if (!window.caches) return Promise.resolve();
+            return caches.keys().then(function (keys) {
+              return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+            });
+          };
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations()
+              .then(function (rs) { return Promise.all(rs.map(function (r) { return r.unregister(); })); })
+              .then(clearCaches).then(done, done);
+          } else { clearCaches().then(done, done); }
+        }, true);
+      })();
+    </script>
+    <div id="root"></div>
+  </body>
+</html>
